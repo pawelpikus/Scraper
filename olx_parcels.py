@@ -9,19 +9,47 @@ soup = BeautifulSoup(page.text, 'html.parser')
 
 results = soup.find(id='body-container')
 offers_promoted = results.find_all('td', class_="offer promoted")
+offers_regular = results.find_all('td', class_="offer")
 
-offers_dict = {}
-for offer in offers_promoted:
-    name = offer.find('strong')
-    price = offer.find('p', class_='price')
-    link = offer.find('a')['href']
-    if None in (name, price, link):
-        continue
 
-    offers_dict[name.text] = (price.text, link)
+def fetch_offer_details(offers):
+    offers_dict = {}
+    for offer in offers:
+        name = offer.find('strong')
+        price = offer.find('p', class_='price')
+        link = offer.find('a')
 
-sorted_dict = {k: v for k, v in sorted(offers_dict.items(), key=lambda item: item[1][1])}
-for k, v in sorted_dict.items():
-    print(k, "-", end='')
+        if None in (name, price, link):
+            continue
+        price = price.text
+        price = price.replace(" zł", "")
+        price = "".join(price.split())
+        price = int(price)
+        name = name.text
+        offers_dict[name] = (price, link)
+    return offers_dict
+
+
+def merge_dict(dict1, dict2):
+    res = {**dict1, **dict2}
+    return res
+
+
+dict1 = fetch_offer_details(offers_regular)
+dict2 = fetch_offer_details(offers_promoted)
+
+parcels = merge_dict(dict1, dict2)
+
+sorted_parcels = {k: v for k, v in sorted(parcels.items(), key=lambda item: item[1][0])}
+
+for k, v in sorted_parcels.items():
+    print("\n", k, "- ", end='')
     for i in range(len(v)):
-        print(v[i])
+        if isinstance(v[i], int):
+            print(v[i], "zł")
+        else:
+            print(v[i])
+
+
+
+
