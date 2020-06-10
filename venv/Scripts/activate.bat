@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\godspeed7\PycharmProjects\Scraper\venv
+set VIRTUAL_ENV=C:\Users\pawel\PycharmProjects\Scraper\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

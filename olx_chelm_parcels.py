@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
+import re
 
 URL = 'https://www.olx.pl/nieruchomosci/dzialki/sprzedaz/chelm/q-dzia%C5%82ka-budowlana/?search%5Bfilter_enum_type%5D' \
       '%5B0%5D=dzialki-budowlane '
@@ -17,9 +18,11 @@ def fetch_offer_details(offers):
     for offer in offers:
         name = offer.find('strong')
         price = offer.find('p', class_='price')
-        link = offer.find('a')
-
-        if None in (name, price, link):
+        link_tag = offer.find('a')
+        if link_tag is None:
+            continue
+        link = link_tag['href']
+        if (name, price) is None:
             continue
         price = price.text
         price = price.replace(" zł", "")
@@ -35,8 +38,8 @@ def merge_dict(dict1, dict2):
     return res
 
 
-dict1 = fetch_offer_details(offers_regular)
-dict2 = fetch_offer_details(offers_promoted)
+dict1 = fetch_offer_details(offers_promoted)
+dict2 = fetch_offer_details(offers_regular)
 
 parcels = merge_dict(dict1, dict2)
 
@@ -50,6 +53,6 @@ for k, v in sorted_parcels.items():
         else:
             print(v[i])
 
-
+input("Type any key to exit.")
 
 
