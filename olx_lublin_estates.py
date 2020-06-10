@@ -18,6 +18,8 @@ def fetch_offer_details(offers):
     for offer in offers:
         name = offer.find('strong')
         price = offer.find('p', class_='price')
+        if (name, price) is None:
+            continue
         link_tag = offer.find('a')
         if link_tag is None:
             continue
