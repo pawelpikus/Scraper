@@ -55,7 +55,6 @@ for k, v in sorted_parcels.items():
         else:
             print(v[i])
 
-input("\n\n"
-      "Type any key to exit.")
+
 
 
